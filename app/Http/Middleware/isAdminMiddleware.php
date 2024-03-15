@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\Middleware;
 use Symfony\Component\HttpFoundation\Response;
 
 class isAdminMiddleware
@@ -11,11 +12,14 @@ class isAdminMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, Middleware $middleware): Response
     {
-        if (!auth()->check() || !auth()->user()->is_admin) {
+//        if (!auth()->check() || !auth()->user()->is_admin)
+        if (!auth()->check() || !auth()->user()->$middleware->is_admin) {
             abort(403);
         }
         return $next($request);

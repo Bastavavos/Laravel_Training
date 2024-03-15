@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Role;
 
 Route::get('/', function () {
     return view('welcome');
@@ -10,6 +11,25 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::group(['middleware' => 'auth'], function() {
+   Route::group([
+       'prefix' => 'admin',
+       'middleware' => 'is_admin',
+       'as' => 'admin.',
+   ], function () {
+       Route::get('tasks',
+           [\App\Http\Controllers\Admin\TaskController::class, 'index'])->name('tasks.index');
+   });
+
+    Route::group([
+        'prefix' => 'user',
+        'as' => 'user.',
+    ], function () {
+        Route::get('tasks',
+            [\App\Http\Controllers\User\TaskController::class, 'index'])->name('tasks.index');
+    });
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
