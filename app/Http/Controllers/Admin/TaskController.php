@@ -11,6 +11,6 @@ class TaskController extends Controller
     {
         $tasks = Task::with('user')->orderBy('due_date')->get();
 
-        return view('admin.tasks.index', compact('tasks'));
+        return view('categories.tasks.index', compact('tasks'));
     }
 }
